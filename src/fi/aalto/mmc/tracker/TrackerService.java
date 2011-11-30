@@ -124,8 +124,8 @@ public class TrackerService extends Service {
 			
 			while (cursor.moveToNext()) {
 				String var1 = "";
-				for (int i=0; i<cursor.getColumnCount(); i++) {
-					  var1 += cursor.getString(i);
+				for (int i=1; i<cursor.getColumnCount(); i++) {
+					  var1 += "\"" + cursor.getString(i) + "\"";
 					  var1 += " ";
 					}
 				
