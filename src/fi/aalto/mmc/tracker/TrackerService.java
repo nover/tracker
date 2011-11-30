@@ -6,6 +6,7 @@ package fi.aalto.mmc.tracker;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.R.bool;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,8 @@ import fi.aalto.mmc.tracker.data.*;
  */
 public class TrackerService extends Service {
 
+	public static boolean IsRunning = false;
+	
 	TrackerDbAdapter dbAdapt = null;
 	
 	// Define a listener that responds to location updates
@@ -79,12 +82,13 @@ public class TrackerService extends Service {
 		
 		dbAdapt =  new TrackerDbAdapter(getApplicationContext());
 		dbAdapt.open();
+		IsRunning = true;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Toast.makeText(this, "Tracker service starting", Toast.LENGTH_SHORT).show();
-
+		
 		// If we get killed, after returning from here, restart
 		return START_STICKY;
 	}
@@ -138,6 +142,7 @@ public class TrackerService extends Service {
 		
 		
 		// and kill the service
+		IsRunning = false;
 		stopSelf();
 	}
 
