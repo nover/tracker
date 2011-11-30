@@ -2,6 +2,7 @@ package fi.aalto.mmc.tracker.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -42,6 +43,14 @@ public class TrackerDbAdapter {
 		return db.insert(DB_TABLE, null, values);
 	}
 
+	/**
+	 * Fetches all of the location entries in the database
+	 * @return A SQLite cursor with the results
+	 */
+	public Cursor fetchAllLocationEntries() {
+		return db.query(DB_TABLE, new String[] { KEY_ROWID, KEY_LONGTITUDE,
+				KEY_LATITUDE, KEY_TIME}, null, null, null, null, null);
+	}
 
 	private ContentValues createContentValues(String longtitude, String latitude, String time) {
 		ContentValues values = new ContentValues();

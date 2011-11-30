@@ -9,13 +9,20 @@ import java.util.Date;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
+import android.os.Environment;
 import fi.aalto.mmc.tracker.data.*;
 
 /**
@@ -92,6 +99,45 @@ public class TrackerService extends Service {
 	public void onDestroy() {
 		Toast.makeText(this, "Tracker service closing", Toast.LENGTH_SHORT).show();
 		
+		// export the database contents to a text file on the external SD card for easy access
+		File sdCard = Environment.getExternalStorageDirectory();
+		File dir = new File (sdCard.getAbsolutePath() + "/tracker/");
+		if(!dir.mkdirs()) {
+			Log.w("IO", "failed to create directory: " + dir.toString());
+		}
+		
+		File file = new File(dir, "locationdata.txt");
+		try {
+			file.createNewFile();
+		} catch (IOException e1) {
+			Log.w("IO", e1.toString());
+		}
+		
+		try {
+			FileWriter fw = new FileWriter(file);
+			
+			Cursor cursor = dbAdapt.fetchAllLocationEntries();
+			
+			while (cursor.moveToNext()) {
+				String var1 = "";
+				for (int i=0; i<cursor.getColumnCount(); i++) {
+					  var1 += cursor.getString(i);
+					  var1 += " ";
+					}
+				
+				fw.write(var1);
+				fw.write("\n");
+				}
+			fw.close();
+
+		} catch (FileNotFoundException e) {
+			Log.e("IO", e.toString());
+		} catch (IOException e) {
+			Log.e("IO", e.toString());
+		}
+		
+		
+		// and kill the service
 		stopSelf();
 	}
 
