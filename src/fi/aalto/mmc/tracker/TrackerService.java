@@ -32,6 +32,7 @@ public class TrackerService extends Service {
 	    	
 	      // makeUseOfNewLocation(location);
 	    	
+	    	Toast.makeText(getApplicationContext(), "Latitude " + location.getLatitude() + " longtitude: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
 	    }
 
@@ -49,9 +50,9 @@ public class TrackerService extends Service {
 		// Acquire a reference to the system Location Manager
 		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		
-	    // Register the listener with the Location Manager to receive location updates every two minutes
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 * 60 * 2, 0, locationListener);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 60 * 2, 0, locationListener);
+	    // Register the listener with the Location Manager to receive location updates every two minutes: 1000 * 60 * 2
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000 , 0, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
 	  }
 
 	  @Override
