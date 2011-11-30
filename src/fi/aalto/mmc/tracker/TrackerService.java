@@ -71,9 +71,8 @@ public class TrackerService extends Service {
 				.getSystemService(Context.LOCATION_SERVICE);
 
 		// Register the listener with the Location Manager to receive location
-		// updates every two minutes: 1000 * 60 * 10
-		long minTime = 1000 * 60 * 10; // each 10 minutes approximately
-		long minDist = 1000; // approximately every 1000 meters travelled
+		long minTime = 1000 * 60 * 5; // each 5 minutes approximately
+		long minDist = 500; // approximately every 500 meters travelled
 		
 		locationManager.requestLocationUpdates(
 				LocationManager.NETWORK_PROVIDER, minTime, minDist, locationListener);
