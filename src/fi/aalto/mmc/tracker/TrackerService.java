@@ -3,6 +3,9 @@
  */
 package fi.aalto.mmc.tracker;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +16,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import fi.aalto.mmc.tracker.data.*;
+
 /**
  * @author nover
  * 
@@ -21,14 +26,11 @@ import android.widget.Toast;
  */
 public class TrackerService extends Service {
 
+	TrackerDbAdapter dbAdapt = null;
+	
 	// Define a listener that responds to location updates
 	LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location location) {
-
-			// Called when a new location is found by the network location
-			// provider.
-
-			// makeUseOfNewLocation(location);
 
 			Toast.makeText(
 					getApplicationContext(),
@@ -36,6 +38,10 @@ public class TrackerService extends Service {
 							+ location.getLongitude(), Toast.LENGTH_SHORT)
 					.show();
 
+			SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS");
+			Date date = new Date();
+			
+			dbAdapt.insertLocation(Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), dateFormat.format(date));
 		}
 
 		public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -60,6 +66,8 @@ public class TrackerService extends Service {
 				LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				1000, 0, locationListener);
+		
+		dbAdapt =  new TrackerDbAdapter(getApplicationContext());
 	}
 
 	@Override
