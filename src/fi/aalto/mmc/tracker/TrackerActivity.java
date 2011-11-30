@@ -40,7 +40,6 @@ public class TrackerActivity extends Activity {
 		});
         
         this.updateServiceStatus();
-        this.updateLastKnownLocation();
     }
     
     private void updateServiceStatus() {
@@ -49,21 +48,5 @@ public class TrackerActivity extends Activity {
     	String text = TrackerService.IsRunning ? "Running..." : "Stopped...";
     	serviceText.setText(text);
     	
-    }
-    
-    private void updateLastKnownLocation() {
-    	LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        
-        final TextView locationText = (TextView) findViewById(R.id.textLastLocation);
-    	
-        if(lastKnownLocation != null) {
-        	String text = lastKnownLocation.getLongitude() + " " + lastKnownLocation.getLatitude();
-        	locationText.setText(text);
-        }
-        else {
-        	locationText.setText("N/A");
-        }
-
     }
 }
