@@ -73,9 +73,9 @@ public class TrackerService extends Service {
 		long minDist = 1000; // approximately every 1000 meters travelled
 		
 		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 100, 0, locationListener);
+				LocationManager.NETWORK_PROVIDER, minTime, minDist, locationListener);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				100, 0, locationListener);
+				minTime, minDist, locationListener);
 		
 		dbAdapt =  new TrackerDbAdapter(getApplicationContext());
 		dbAdapt.open();
