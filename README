@@ -1,0 +1,5 @@
+Tracker is a simple android service utilizing the localtion services of the platform to log your current location at a specificed interval.
+
+This project is developed mainly to support a project for the course Mobile Cloud Computing at Aalto University.
+
+Please use the sources as you wish.
