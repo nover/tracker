@@ -38,7 +38,7 @@ public class TrackerService extends Service {
 							+ location.getLongitude(), Toast.LENGTH_SHORT)
 					.show();
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			
 			dbAdapt.insertLocation(Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), dateFormat.format(date));
@@ -68,6 +68,7 @@ public class TrackerService extends Service {
 				1000, 0, locationListener);
 		
 		dbAdapt =  new TrackerDbAdapter(getApplicationContext());
+		dbAdapt.open();
 	}
 
 	@Override
