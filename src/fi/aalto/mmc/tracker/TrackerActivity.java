@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class TrackerActivity extends Activity {
@@ -20,6 +21,7 @@ public class TrackerActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), TrackerService.class);
 				startService(intent);
+				updateServiceStatus();
 			}
 		});
         
@@ -29,8 +31,18 @@ public class TrackerActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), TrackerService.class);
 				stopService(intent);
+				updateServiceStatus();
 			}
 		});
         
+        this.updateServiceStatus();
+    }
+    
+    private void updateServiceStatus() {
+    	final TextView serviceText = (TextView) findViewById(R.id.textServiceStatus);
+    	
+    	String text = TrackerService.IsRunning ? "Running..." : "Stopped...";
+    	serviceText.setText(text);
+    	
     }
 }
