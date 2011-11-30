@@ -61,11 +61,14 @@ public class TrackerService extends Service {
 				.getSystemService(Context.LOCATION_SERVICE);
 
 		// Register the listener with the Location Manager to receive location
-		// updates every two minutes: 1000 * 60 * 2
+		// updates every two minutes: 1000 * 60 * 10
+		long minTime = 1000 * 60 * 10; // each 10 minutes approximately
+		long minDist = 1000; // approximately every 1000 meters travelled
+		
 		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+				LocationManager.NETWORK_PROVIDER, 100, 0, locationListener);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				1000, 0, locationListener);
+				100, 0, locationListener);
 		
 		dbAdapt =  new TrackerDbAdapter(getApplicationContext());
 		dbAdapt.open();
@@ -73,7 +76,7 @@ public class TrackerService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Tracker service starting", Toast.LENGTH_SHORT).show();
 
 		// If we get killed, after returning from here, restart
 		return START_STICKY;
@@ -87,7 +90,9 @@ public class TrackerService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Tracker service closing", Toast.LENGTH_SHORT).show();
+		
+		stopSelf();
 	}
 
 }
