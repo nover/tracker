@@ -13,40 +13,44 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TrackerActivity extends Activity {
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        final Button button = (Button) findViewById(R.id.button1);
-        button.setOnClickListener(new View.OnClickListener() {
-			
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		// bind a click handler to the "start service button"
+		final Button button = (Button) findViewById(R.id.button1);
+		button.setOnClickListener(new View.OnClickListener() {
+
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), TrackerService.class);
+				Intent intent = new Intent(getApplicationContext(),
+						TrackerService.class);
 				startService(intent);
 				updateServiceStatus();
 			}
 		});
-        
-        final Button button1 = (Button) findViewById(R.id.button2);
-        button1.setOnClickListener(new View.OnClickListener() {
-			
+
+		// bind a click handler to the "stop service button"
+		final Button button1 = (Button) findViewById(R.id.button2);
+		button1.setOnClickListener(new View.OnClickListener() {
+
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), TrackerService.class);
+				Intent intent = new Intent(getApplicationContext(),
+						TrackerService.class);
 				stopService(intent);
 				updateServiceStatus();
 			}
 		});
-        
-        this.updateServiceStatus();
-    }
-    
-    private void updateServiceStatus() {
-    	final TextView serviceText = (TextView) findViewById(R.id.textServiceStatus);
-    	
-    	String text = TrackerService.IsRunning ? "Running..." : "Stopped...";
-    	serviceText.setText(text);
-    	
-    }
+
+		this.updateServiceStatus();
+	}
+
+	private void updateServiceStatus() {
+		final TextView serviceText = (TextView) findViewById(R.id.textServiceStatus);
+
+		String text = TrackerService.IsRunning ? "Running..." : "Stopped...";
+		serviceText.setText(text);
+
+	}
 }

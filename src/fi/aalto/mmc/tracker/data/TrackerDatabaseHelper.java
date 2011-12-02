@@ -4,6 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * SQLiteOpenHelper extension, providing methods for android to create and
+ * upgrade tables
+ * 
+ * @author nover
+ * 
+ */
 public class TrackerDatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "locationdata";
 

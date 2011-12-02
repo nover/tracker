@@ -34,24 +34,35 @@ import fi.aalto.mmc.tracker.data.*;
  */
 public class TrackerService extends Service {
 
+	/**
+	 * Static field which can be used by activities to determine whether the
+	 * service is running
+	 */
 	public static boolean IsRunning = false;
-	
+
+	/**
+	 * Service "global" handle to the database adapter
+	 */
 	TrackerDbAdapter dbAdapt = null;
-	
+
 	// Define a listener that responds to location updates
 	LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location location) {
 
+			// make a toast with the new location data
 			Toast.makeText(
 					getApplicationContext(),
 					"Latitude " + location.getLatitude() + " longtitude: "
 							+ location.getLongitude(), Toast.LENGTH_SHORT)
 					.show();
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			// and also store this information
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
-			
-			dbAdapt.insertLocation(Double.toString(location.getLongitude()), Double.toString(location.getLatitude()), dateFormat.format(date));
+			dbAdapt.insertLocation(Double.toString(location.getLongitude()),
+					Double.toString(location.getLatitude()),
+					dateFormat.format(date));
 		}
 
 		public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -73,21 +84,24 @@ public class TrackerService extends Service {
 		// Register the listener with the Location Manager to receive location
 		long minTime = 1000 * 60 * 5; // each 5 minutes approximately
 		long minDist = 500; // approximately every 500 meters travelled
-		
+
 		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, minTime, minDist, locationListener);
+				LocationManager.NETWORK_PROVIDER, minTime, minDist,
+				locationListener);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				minTime, minDist, locationListener);
-		
-		dbAdapt =  new TrackerDbAdapter(getApplicationContext());
+
+		// create dabase adapter handle and connection
+		dbAdapt = new TrackerDbAdapter(getApplicationContext());
 		dbAdapt.open();
 		IsRunning = true;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Toast.makeText(this, "Tracker service starting", Toast.LENGTH_SHORT).show();
-		
+		Toast.makeText(this, "Tracker service starting", Toast.LENGTH_SHORT)
+				.show();
+
 		// If we get killed, after returning from here, restart
 		return START_STICKY;
 	}
@@ -100,37 +114,41 @@ public class TrackerService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Toast.makeText(this, "Tracker service closing", Toast.LENGTH_SHORT).show();
-		
-		// export the database contents to a text file on the external SD card for easy access
+		Toast.makeText(this, "Tracker service closing", Toast.LENGTH_SHORT)
+				.show();
+
+		// export the database contents to a text file on the external SD card
+		// for easy access
 		File sdCard = Environment.getExternalStorageDirectory();
-		File dir = new File (sdCard.getAbsolutePath() + "/tracker/");
-		if(!dir.mkdirs()) {
-			Log.w("IO", "failed to create directory: " + dir.toString());
+		File dir = new File(sdCard.getAbsolutePath() + "/tracker/");
+		if (!dir.mkdirs()) {
+			Log.w("Tracker,IO", "failed to create directory: " + dir.toString());
 		}
-		
+
 		File file = new File(dir, "locationdata.txt");
 		try {
 			file.createNewFile();
 		} catch (IOException e1) {
-			Log.w("IO", e1.toString());
+			Log.w("Tracker,IO", e1.toString());
 		}
-		
+
 		try {
 			FileWriter fw = new FileWriter(file);
-			
+
 			Cursor cursor = dbAdapt.fetchAllLocationEntries();
-			
+
 			while (cursor.moveToNext()) {
 				String var1 = "";
-				for (int i=1; i<cursor.getColumnCount(); i++) {
-					  var1 += "\"" + cursor.getString(i) + "\"";
-					  var1 += " ";
-					}
-				
+
+				// we start at 1 to skip the identity column
+				for (int i = 1; i < cursor.getColumnCount(); i++) {
+					var1 += "\"" + cursor.getString(i) + "\"";
+					var1 += " ";
+				}
+
 				fw.write(var1);
 				fw.write("\n");
-				}
+			}
 			fw.close();
 
 		} catch (FileNotFoundException e) {
@@ -138,11 +156,9 @@ public class TrackerService extends Service {
 		} catch (IOException e) {
 			Log.e("IO", e.toString());
 		}
-		
-		
+
 		// and kill the service
 		IsRunning = false;
 		stopSelf();
 	}
-
 }

@@ -3,6 +3,12 @@ package fi.aalto.mmc.tracker.data;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+/**
+ * Class providing methods to create and upgrade the locationdata storage table
+ * 
+ * @author nover
+ * 
+ */
 public class LocationTable {
 	// Database creation SQL statement
 	private static final String DATABASE_CREATE = "create table locations "
