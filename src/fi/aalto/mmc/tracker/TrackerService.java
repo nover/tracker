@@ -6,7 +6,6 @@ package fi.aalto.mmc.tracker;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.R.bool;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
